@@ -18,10 +18,10 @@
     <button class="btn-primary" bindtap="goToAddProduct">添加商品</button>
   </view>
 
-  <!-- 购物车入口 -->
-  <view class="cart-bar" wx:if="{{!isOwner && cartItems.length > 0}}">
-    <text class="cart-count">购物车中有 {{cartItems.length}} 件商品</text>
-    <button class="btn-primary" bindtap="goToCart">去购物车</button>
+  <!-- 购物车悬浮按钮 -->
+  <view class="cart-float-btn" wx:if="{{!isOwner}}" bindtap="goToCart">
+    <text class="cart-icon">🛒</text>
+    <view class="cart-badge" wx:if="{{cartTotalCount > 0}}">{{cartTotalCount > 99 ? '99+' : cartTotalCount}}</view>
   </view>
 
   <!-- 商品列表 -->

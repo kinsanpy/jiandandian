@@ -76,6 +76,41 @@
   color: #666;
 }
 
+.cart-float-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 200rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2rpx solid #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.cart-icon {
+  font-size: 48rpx;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  background-color: #ff4d4f;
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 18rpx;
+  text-align: center;
+  padding: 0 8rpx;
+}
+
 .product-section {
   padding: 0 20rpx;
 }

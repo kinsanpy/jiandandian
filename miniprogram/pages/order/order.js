@@ -141,14 +141,20 @@ Page({
     Promise.all(promises).then(results => {
       wx.hideLoading()
 
-      // 清空购物车
+      // 清空购物车中已结算的商品
       const db = wx.cloud.database()
-      const selectedIds = []
+      const productIds = []
       this.data.confirmData.forEach(w => {
         w.items.forEach(item => {
-          // 这里需要根据product_name匹配购物车商品
+          productIds.push(item.product_id)
         })
       })
+
+      // 删除购物车中这些商品
+      db.collection('cart').where({
+        buyer_id: app.globalData.openid,
+        product_id: db.command.in(productIds)
+      }).remove()
 
       wx.showToast({
         title: '下单成功',

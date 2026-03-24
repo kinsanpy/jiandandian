@@ -8,7 +8,8 @@ Page({
     products: [],
     owner: null,
     isOwner: false,
-    cartItems: []
+    cartItems: [],
+    cartTotalCount: 0
   },
 
   onLoad: function(options) {
@@ -62,7 +63,22 @@ Page({
     db.collection('cart').where({
       buyer_id: app.globalData.openid
     }).get().then(res => {
-      this.setData({ cartItems: res.data })
+      // 合并相同商品，数量累加
+      const mergedMap = {}
+      let totalQuantity = 0
+      res.data.forEach(item => {
+        if (mergedMap[item.product_id]) {
+          mergedMap[item.product_id].quantity += item.quantity
+        } else {
+          mergedMap[item.product_id] = { ...item }
+        }
+        totalQuantity += item.quantity
+      })
+      const cartItems = Object.values(mergedMap)
+      this.setData({
+        cartItems: cartItems,
+        cartTotalCount: totalQuantity
+      })
     })
   },
 
@@ -80,24 +96,48 @@ Page({
     if (!product) return
 
     const db = wx.cloud.database()
-    db.collection('cart').add({
-      data: {
-        buyer_id: app.globalData.openid,
-        warehouse_id: this.data.warehouseId,
-        warehouse_name: this.data.warehouse.name,
-        product_id: productId,
-        product_name: product.name,
-        price: product.price,
-        unit: product.unit,
-        quantity: 1,
-        created_at: db.serverDate()
+
+    // 先检查购物车中是否已有该商品
+    db.collection('cart').where({
+      buyer_id: app.globalData.openid,
+      product_id: productId
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        // 已存在，只增加数量
+        const existingItem = res.data[0]
+        db.collection('cart').doc(existingItem._id).update({
+          data: {
+            quantity: existingItem.quantity + 1
+          }
+        }).then(() => {
+          wx.showToast({
+            title: '已增加数量',
+            icon: 'success'
+          })
+          this.loadCart()
+        })
+      } else {
+        // 不存在，新增记录
+        db.collection('cart').add({
+          data: {
+            buyer_id: app.globalData.openid,
+            warehouse_id: this.data.warehouseId,
+            warehouse_name: this.data.warehouse.name,
+            product_id: productId,
+            product_name: product.name,
+            price: product.price,
+            unit: product.unit,
+            quantity: 1,
+            created_at: db.serverDate()
+          }
+        }).then(res => {
+          wx.showToast({
+            title: '已加入购物车',
+            icon: 'success'
+          })
+          this.loadCart()
+        })
       }
-    }).then(res => {
-      wx.showToast({
-        title: '已加入购物车',
-        icon: 'success'
-      })
-      this.loadCart()
     })
   },
 

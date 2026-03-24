@@ -19,7 +19,7 @@ async function createOrder(event, context) {
     throw new Error('仓库不存在')
   }
 
-  // 构建订单商品详情（快照）
+  // 构建订单商品详情（快照）并扣减库存
   const orderItems = []
   let totalAmount = 0
 
@@ -43,6 +43,14 @@ async function createOrder(event, context) {
     })
 
     totalAmount += price * quantity
+
+    // 下单时立即扣减库存，确保不会变成负数
+    const newStock = Math.max(0, product.stock - quantity)
+    await db.collection('products').doc(item.product_id).update({
+      data: {
+        stock: newStock
+      }
+    })
   }
 
   const orderId = 'ORD_' + Date.now() + '_' + wxContext.OPENID.slice(-6)
@@ -190,25 +198,6 @@ async function updateOrderStatus(event, context) {
     throw new Error('无效的状态流转')
   }
 
-  // 买家只能确认收货
-  if (isBuyer && status === 'completed') {
-    // 减库存
-    for (const item of order.items) {
-      try {
-        const productRes = await db.collection('products').doc(item.product_id).get()
-        if (productRes.data) {
-          await db.collection('products').doc(item.product_id).update({
-            data: {
-              stock: productRes.data.stock - item.quantity
-            }
-          })
-        }
-      } catch (e) {
-        console.error('库存更新失败', e)
-      }
-    }
-  }
-
   const updateData = { status: status }
 
   if (logistics_company) updateData.logistics_company = logistics_company
@@ -241,6 +230,22 @@ async function cancelOrder(event, context) {
 
   if (order.status !== 'pending') {
     throw new Error('只能取消待处理的订单')
+  }
+
+  // 取消订单时返还库存
+  for (const item of order.items) {
+    try {
+      const productRes = await db.collection('products').doc(item.product_id).get()
+      if (productRes.data) {
+        await db.collection('products').doc(item.product_id).update({
+          data: {
+            stock: productRes.data.stock + item.quantity
+          }
+        })
+      }
+    } catch (e) {
+      console.error('库存返还失败', e)
+    }
   }
 
   await db.collection('orders').doc(orderId).update({

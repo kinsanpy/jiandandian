@@ -94,13 +94,33 @@ Page({
 
   goToMyOrders: function() {
     wx.navigateTo({
-      url: '/pages/order/list?type=my'
+      url: '/pages/order/order?type=my'
     })
   },
 
   goToReceivedOrders: function() {
     wx.navigateTo({
-      url: '/pages/order/list?type=received'
+      url: '/pages/order/order?type=received'
+    })
+  },
+
+  onLogout: function() {
+    wx.showModal({
+      title: '确认退出',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          // 清除本地存储的登录信息
+          wx.removeStorageSync('userInfo')
+          // 清除全局数据
+          app.globalData.userInfo = null
+          app.globalData.openid = null
+          // 跳转到登录页面
+          wx.redirectTo({
+            url: '/pages/login/login'
+          })
+        }
+      }
     })
   }
 })
