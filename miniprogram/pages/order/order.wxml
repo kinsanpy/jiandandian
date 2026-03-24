@@ -1,0 +1,123 @@
+<view class="container">
+  <!-- 确认订单页面 -->
+  <view wx:if="{{orderType === 'confirm'}}">
+    <view class="confirm-section">
+      <view class="section-title">订单商品</view>
+
+      <view class="warehouse-group" wx:for="{{confirmData}}" wx:key="warehouse_id">
+        <view class="warehouse-name">{{item.warehouse_name}}</view>
+
+        <view class="order-item" wx:for="{{item.items}}" wx:key="product_id" wx:for-item="product">
+          <view class="item-info">
+            <text class="item-name">{{product.product_name}}</text>
+            <text class="item-price">¥{{product.price}} × {{product.quantity}} {{product.unit}}</text>
+          </view>
+          <text class="item-subtotal">¥{{product.price * product.quantity}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="remark-section card">
+      <text class="remark-label">订单备注</text>
+      <input class="remark-input" placeholder="可选填写备注信息" bindinput="onRemarkInput" />
+    </view>
+
+    <view class="bottom-bar">
+      <view class="total-info">
+        <text class="total-label">合计:</text>
+        <text class="total-amount">¥{{totalAmount}}</text>
+      </view>
+      <button class="submit-btn" bindtap="submitOrder">提交订单</button>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view wx:elif="{{orderType === 'my' || orderType === 'received'}}">
+    <view class="order-list">
+      <view class="order-item card" wx:for="{{orders}}" wx:key="_id" bindtap="goToOrderDetail" data-id="{{item._id}}">
+        <view class="order-header">
+          <text class="order-warehouse">{{item.warehouse_name}}</text>
+          <text class="order-status status-{{item.status}}">{{statusMap[item.status]}}</text>
+        </view>
+
+        <view class="order-products">
+          <text wx:for="{{item.items}}" wx:key="product_id" wx:for-item="p">
+            {{p.product_name}} × {{p.quantity}}；
+          </text>
+        </view>
+
+        <view class="order-footer">
+          <text class="order-time">{{item.created_at}}</text>
+          <text class="order-total">¥{{item.total_amount}}</text>
+        </view>
+
+        <!-- 买家操作 -->
+        <view class="order-actions" wx:if="{{orderType === 'my' && item.status === 'shipped'}}">
+          <button class="action-btn confirm-btn" data-id="{{item._id}}" data-status="completed" bindtap="updateStatus">
+            确认收货
+          </button>
+        </view>
+
+        <view class="order-actions" wx:if="{{orderType === 'my' && item.status === 'pending'}}">
+          <button class="action-btn cancel-btn" data-id="{{item._id}}" bindtap="cancelOrder">取消订单</button>
+        </view>
+
+        <!-- 卖家操作 -->
+        <view class="order-actions" wx:if="{{orderType === 'received' && item.status === 'pending'}}">
+          <button class="action-btn" data-id="{{item._id}}" data-status="producing" bindtap="updateStatus">接单生产</button>
+        </view>
+
+        <view class="order-actions" wx:if="{{orderType === 'received' && item.status === 'producing'}}">
+          <button class="action-btn" data-id="{{item._id}}" data-status="shipped" bindtap="updateStatus">确认发货</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && orders.length === 0}}">
+      <text class="empty-text">暂无订单</text>
+    </view>
+  </view>
+
+  <!-- 订单详情 -->
+  <view wx:elif="{{orderType === 'detail' && orderData}}">
+    <view class="order-detail">
+      <view class="detail-section card">
+        <view class="section-title">订单信息</view>
+        <view class="detail-row">
+          <text class="detail-label">订单号:</text>
+          <text class="detail-value">{{orderData._id}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">状态:</text>
+          <text class="detail-value status-{{orderData.status}}">{{statusMap[orderData.status]}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">下单时间:</text>
+          <text class="detail-value">{{orderData.created_at}}</text>
+        </view>
+        <view class="detail-row" wx:if="{{orderData.remark}}">
+          <text class="detail-label">备注:</text>
+          <text class="detail-value">{{orderData.remark}}</text>
+        </view>
+      </view>
+
+      <view class="detail-section card">
+        <view class="section-title">商品清单</view>
+        <view class="detail-item" wx:for="{{orderData.items}}" wx:key="product_id">
+          <text class="item-name">{{item.product_name}}</text>
+          <text class="item-price">¥{{item.price}} × {{item.quantity}} {{item.unit}}</text>
+        </view>
+        <view class="detail-total">
+          <text>合计:</text>
+          <text class="total-amount">¥{{orderData.total_amount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,43 @@
+/**app.wxss**/
+.container {
+  padding: 20rpx;
+}
+
+.btn-primary {
+  background-color: #1890ff;
+  color: #ffffff;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  text-align: center;
+}
+
+.btn-default {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1rpx solid #d9d9d9;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  text-align: center;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.price {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.stock {
+  color: #52c41a;
+}
+
+.stock-zero {
+  color: #ff4d4f;
+}

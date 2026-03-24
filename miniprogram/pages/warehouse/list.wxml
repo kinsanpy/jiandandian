@@ -1,0 +1,64 @@
+<view class="container">
+  <!-- 创建仓库按钮 -->
+  <view class="action-bar">
+    <button class="btn-primary" bindtap="showCreateModal">创建仓库</button>
+  </view>
+
+  <!-- 仓库列表 -->
+  <view class="warehouse-list">
+    <view class="warehouse-item card" wx:for="{{warehouses}}" wx:key="_id">
+      <view class="item-header" bindtap="goToWarehouse" data-id="{{item._id}}">
+        <text class="warehouse-name">{{item.name}}</text>
+        <text class="public-badge {{item.is_public ? '' : 'private'}}">
+          {{item.is_public ? '公开' : '私密'}}
+        </text>
+      </view>
+
+      <view class="warehouse-desc">{{item.description || '暂无描述'}}</view>
+
+      <view class="item-footer">
+        <text class="create-time">创建于 {{item.created_at}}</text>
+        <button class="toggle-btn" data-id="{{item._id}}" bindtap="togglePublic">
+          切换为{{item.is_public ? '私密' : '公开'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{warehouses.length === 0}}">
+    <text class="empty-text">你还没有创建仓库</text>
+    <text class="empty-hint">点击上方按钮创建第一个仓库</text>
+  </view>
+
+  <!-- 创建仓库弹窗 -->
+  <view class="modal" wx:if="{{showCreateModal}}">
+    <view class="modal-mask" bindtap="hideCreateModal"></view>
+    <view class="modal-content">
+      <view class="modal-title">创建仓库</view>
+
+      <view class="form-item">
+        <text class="form-label">仓库名称</text>
+        <input class="form-input" placeholder="请输入仓库名称" value="{{newWarehouseName}}" bindinput="onNameInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">仓库描述</text>
+        <textarea class="form-textarea" placeholder="请输入仓库描述（可选）" value="{{newWarehouseDesc}}" bindinput="onDescInput" />
+      </view>
+
+      <view class="form-item">
+        <checkbox-group bindchange="onPublicChange">
+          <label>
+            <checkbox value="public" checked="{{newWarehousePublic}}" /> 公开仓库（其他人可见）
+          </label>
+        </checkbox-group>
+      </view>
+
+      <view class="modal-actions">
+        <button class="btn-default" bindtap="hideCreateModal">取消</button>
+        <button class="btn-primary" bindtap="createWarehouse">创建</button>
+      </view>
+    </view>
+  </view>
+</view>

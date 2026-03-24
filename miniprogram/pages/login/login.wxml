@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="logo-section">
+    <text class="app-title">简单点</text>
+    <text class="app-subtitle">在手机里管理你的库存和订单</text>
+  </view>
+
+  <!-- 登录表单 -->
+  <view class="form-section" wx:if="{{isLogin}}">
+    <view class="form-title">登录</view>
+
+    <view class="form-item">
+      <input class="form-input" placeholder="用户名" value="{{username}}" bindinput="onUsernameInput" />
+    </view>
+
+    <view class="form-item">
+      <input class="form-input" type="password" placeholder="密码" value="{{password}}" bindinput="onPasswordInput" />
+    </view>
+
+    <button class="btn-primary submit-btn" bindtap="login">登录</button>
+
+    <view class="switch-mode">
+      <text>还没有账号？</text>
+      <text class="link" bindtap="switchMode">立即注册</text>
+    </view>
+  </view>
+
+  <!-- 注册表单 -->
+  <view class="form-section" wx:else>
+    <view class="form-title">注册</view>
+
+    <view class="form-item">
+      <input class="form-input" placeholder="用户名" value="{{registerUsername}}" bindinput="onRegisterUsernameInput" />
+    </view>
+
+    <view class="form-item">
+      <input class="form-input" type="password" placeholder="密码（至少6位）" value="{{registerPassword}}" bindinput="onRegisterPasswordInput" />
+    </view>
+
+    <view class="form-item">
+      <input class="form-input" type="password" placeholder="确认密码" value="{{registerConfirmPassword}}" bindinput="onRegisterConfirmPasswordInput" />
+    </view>
+
+    <button class="btn-primary submit-btn" bindtap="register">注册</button>
+
+    <view class="switch-mode">
+      <text>已有账号？</text>
+      <text class="link" bindtap="switchMode">立即登录</text>
+    </view>
+  </view>
+</view>

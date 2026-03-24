@@ -1,0 +1,32 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索公开仓库" value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="onSearch" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 仓库列表 -->
+  <view class="warehouse-list">
+    <view class="warehouse-card card" wx:for="{{warehouses}}" wx:key="_id" bindtap="goToWarehouse" data-id="{{item._id}}">
+      <view class="warehouse-header">
+        <text class="warehouse-name">{{item.name}}</text>
+        <text class="warehouse-badge">公开</text>
+      </view>
+      <view class="warehouse-desc">{{item.description || '暂无描述'}}</view>
+      <view class="warehouse-meta">
+        <text class="meta-text">创建于 {{item.created_at}}</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && warehouses.length === 0}}">
+      <text class="empty-text">暂无公开仓库</text>
+      <text class="empty-hint">成为第一个创建公开仓库的用户吧！</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

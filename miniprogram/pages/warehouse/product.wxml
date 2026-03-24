@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="form-section card">
+    <view class="form-item">
+      <text class="form-label">商品名称 *</text>
+      <input class="form-input" placeholder="请输入商品名称" value="{{name}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">SKU编码</text>
+      <input class="form-input" placeholder="请输入SKU编码（可选）" value="{{sku}}" bindinput="onSkuInput" />
+    </view>
+
+    <view class="form-row">
+      <view class="form-item half">
+        <text class="form-label">库存数量</text>
+        <input class="form-input" type="number" placeholder="0" value="{{stock}}" bindinput="onStockInput" />
+      </view>
+
+      <view class="form-item half">
+        <text class="form-label">单位</text>
+        <input class="form-input" placeholder="个/箱/件" value="{{unit}}" bindinput="onUnitInput" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">单价 (元)</text>
+      <input class="form-input" type="digit" placeholder="0.00" value="{{price}}" bindinput="onPriceInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">商品描述</text>
+      <textarea class="form-textarea" placeholder="请输入商品描述（可选）" value="{{description}}" bindinput="onDescInput" />
+    </view>
+  </view>
+
+  <view class="submit-bar">
+    <button class="btn-primary submit-btn" bindtap="submit">
+      {{isEdit ? '保存修改' : '添加商品'}}
+    </button>
+  </view>
+</view>

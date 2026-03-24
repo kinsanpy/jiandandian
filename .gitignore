@@ -1,0 +1,21 @@
+# 微信小程序
+.miniprogram/
+
+# 云函数
+node_modules/
+cloudfunctions/**/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 日志
+*.log
+
+# 本地配置
+project.private.config.json

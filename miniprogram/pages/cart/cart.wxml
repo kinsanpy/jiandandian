@@ -1,0 +1,53 @@
+<view class="container">
+  <!-- 登录提示 -->
+  <view class="login-tip" wx:if="{{!hasLogin}}">
+    <text>登录后查看购物车</text>
+  </view>
+
+  <!-- 购物车列表 -->
+  <view class="cart-list" wx:else>
+    <view class="cart-item card" wx:for="{{cartItems}}" wx:key="_id">
+      <view class="item-select" bindtap="onSelectItem" data-id="{{item._id}}">
+        <checkbox checked="{{selectedItems.includes(item._id)}}" />
+      </view>
+
+      <view class="item-info">
+        <text class="item-name">{{item.product_name}}</text>
+        <text class="item-warehouse">来自: {{item.warehouse_name}}</text>
+        <text class="item-price">¥{{item.price}} / {{item.unit}}</text>
+      </view>
+
+      <view class="item-actions">
+        <view class="quantity-control">
+          <text class="qty-btn" bindtap="onQuantityChange" data-id="{{item._id}}" data-type="minus">-</text>
+          <input class="qty-input" type="number" value="{{item.quantity}}" bindchange="onQuantityChange" data-id="{{item._id}}" />
+          <text class="qty-btn" bindtap="onQuantityChange" data-id="{{item._id}}" data-type="plus">+</text>
+        </view>
+        <text class="remove-btn" bindtap="removeItem" data-id="{{item._id}}">删除</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{cartItems.length === 0}}">
+      <text class="empty-text">购物车是空的</text>
+      <text class="empty-hint">去逛逛仓库吧~</text>
+    </view>
+  </view>
+
+  <!-- 底部栏 -->
+  <view class="bottom-bar" wx:if="{{cartItems.length > 0}}">
+    <view class="select-all" bindtap="onSelectAll">
+      <checkbox checked="{{selectedItems.length === cartItems.length && cartItems.length > 0}}" />
+      <text>全选</text>
+    </view>
+
+    <view class="total-info">
+      <text class="total-label">合计:</text>
+      <text class="total-amount">¥{{totalAmount}}</text>
+    </view>
+
+    <button class="checkout-btn {{selectedItems.length === 0 ? 'disabled' : ''}}" bindtap="checkout">
+      结算 ({{selectedItems.length}})
+    </button>
+  </view>
+</view>
