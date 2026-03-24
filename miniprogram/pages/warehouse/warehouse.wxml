@@ -8,8 +8,13 @@
     </view>
     <view class="warehouse-desc">{{warehouse.description || '暂无描述'}}</view>
     <view class="owner-info" wx:if="{{owner}}">
-      <image class="owner-avatar" src="{{owner.avatar}}" />
-      <text class="owner-name">{{owner.nickname}}</text>
+      <view class="owner-avatar-wrapper">
+        <image class="owner-avatar" src="{{owner.avatar}}" wx:if="{{owner.avatar}}" />
+        <view class="owner-avatar-placeholder" wx:else>
+          <text>{{owner.nickname ? owner.nickname.charAt(0) : '商'}}</text>
+        </view>
+      </view>
+      <text class="owner-name">{{owner.nickname || '匿名商家'}}</text>
     </view>
   </view>
 

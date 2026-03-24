@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="profile-card card">
+    <!-- 头像 -->
+    <view class="avatar-section">
+      <view class="avatar-wrapper" bindtap="onChooseAvatar">
+        <image class="avatar-img" src="{{avatar}}" />
+        <view class="avatar-placeholder" wx:if="{{!avatar}}">
+          <text class="avatar-icon">📷</text>
+          <text class="avatar-tip">点击设置头像</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 昵称 -->
+    <view class="form-item">
+      <text class="form-label">昵称</text>
+      <input class="form-input" placeholder="请输入昵称（可选）" value="{{nickname}}" bindinput="onNicknameInput" />
+    </view>
+
+    <!-- 公司名称 -->
+    <view class="form-item">
+      <text class="form-label">公司名称</text>
+      <input class="form-input" placeholder="请输入公司名称（可选）" value="{{company}}" bindinput="onCompanyInput" />
+    </view>
+
+    <!-- 主营业务 -->
+    <view class="form-item">
+      <text class="form-label">主营业务</text>
+      <input class="form-input" placeholder="请输入主营业务（可选）" value="{{business}}" bindinput="onBusinessInput" />
+    </view>
+
+    <!-- 保存按钮 -->
+    <button class="save-btn" bindtap="onSave">保存</button>
+  </view>
+</view>

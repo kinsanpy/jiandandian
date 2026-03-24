@@ -1,44 +1,7 @@
-.user-section {
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-  padding: 60rpx 30rpx;
-  margin-bottom: 20rpx;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 60rpx;
-  margin-bottom: 20rpx;
-  border: 4rpx solid rgba(255, 255, 255, 0.5);
-}
-
-.nickname {
-  color: #fff;
-  font-size: 32rpx;
-  font-weight: bold;
-}
-
-.login-btn {
-  width: 200rpx;
-  height: 70rpx;
-  line-height: 70rpx;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border-radius: 35rpx;
-  font-size: 28rpx;
-  border: 2rpx solid rgba(255, 255, 255, 0.5);
-}
-
 .menu-section {
   background-color: #fff;
   border-radius: 16rpx;
-  margin: 0 20rpx;
+  margin: 20rpx;
   overflow: hidden;
 }
 
@@ -82,4 +45,70 @@
 
 .logout-text {
   color: #ff4d4f;
+}
+
+/* 用户名片 */
+.profile-card {
+  margin: 20rpx;
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+}
+
+.profile-left {
+  margin-right: 24rpx;
+}
+
+.profile-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+}
+
+.profile-avatar-placeholder {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar-placeholder text {
+  font-size: 48rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-company {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 4rpx;
+}
+
+.profile-business {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.profile-nickname {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.profile-edit-tip {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.profile-arrow {
+  font-size: 32rpx;
+  color: #ccc;
 }

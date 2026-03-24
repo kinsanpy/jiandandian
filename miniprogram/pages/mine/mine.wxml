@@ -1,13 +1,19 @@
 <view class="container">
-  <!-- 用户信息 -->
-  <view class="user-section">
-    <view class="user-info" wx:if="{{userInfo}}">
-      <image class="avatar" src="{{userInfo.avatarUrl}}" />
-      <text class="nickname">{{userInfo.nickName}}</text>
+  <!-- 用户名片 -->
+  <view class="profile-card card" bindtap="goToProfile">
+    <view class="profile-left">
+      <image class="profile-avatar" src="{{profile.avatar}}" wx:if="{{profile.avatar}}" />
+      <view class="profile-avatar-placeholder" wx:else>
+        <text>{{profile.nickname ? profile.nickname.charAt(0) : (profile.company ? profile.company.charAt(0) : '未')}}</text>
+      </view>
     </view>
-    <button class="login-btn" wx:else open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
-      点击登录
-    </button>
+    <view class="profile-info">
+      <view class="profile-nickname">{{profile.nickname || profile.company || '点击完善名片'}}</view>
+      <view class="profile-company" wx:if="{{profile.company}}">{{profile.company}}</view>
+      <view class="profile-business" wx:if="{{profile.business}}">{{profile.business}}</view>
+      <view class="profile-edit-tip" wx:if="{{!profile.nickname && !profile.company && !profile.business}}">点击编辑名片</view>
+    </view>
+    <view class="profile-arrow">></view>
   </view>
 
   <!-- 功能菜单 -->

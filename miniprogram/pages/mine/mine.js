@@ -3,11 +3,15 @@ const app = getApp()
 
 Page({
   data: {
-    userInfo: null,
     openid: '',
     myWarehouseCount: 0,
     myOrderCount: 0,
-    receivedOrderCount: 0
+    receivedOrderCount: 0,
+    profile: {
+      avatar: '',
+      company: '',
+      business: ''
+    }
   },
 
   onLoad: function() {
@@ -17,26 +21,23 @@ Page({
   onShow: function() {
     if (app.globalData.openid) {
       this.loadUserData()
+      this.loadProfile()
     }
   },
 
   checkLogin: function() {
-    if (!app.globalData.openid) {
-      wx.cloud.callFunction({
-        name: 'login',
-        data: {}
-      }).then(res => {
-        app.globalData.openid = res.result.openid
-        this.setData({ openid: res.result.openid })
-        this.loadUserData()
+    const userInfo = wx.getStorageSync('userInfo')
+    if (!userInfo) {
+      wx.redirectTo({
+        url: '/pages/login/login'
       })
-    } else {
-      this.setData({ openid: app.globalData.openid })
+      return
     }
-
-    if (app.globalData.userInfo) {
-      this.setData({ userInfo: app.globalData.userInfo })
-    }
+    app.globalData.userInfo = userInfo
+    app.globalData.openid = userInfo.userId
+    this.setData({ openid: app.globalData.openid })
+    this.loadUserData()
+    this.loadProfile()
   },
 
   loadUserData: function() {
@@ -71,19 +72,28 @@ Page({
     })
   },
 
-  onGetUserInfo: function(e) {
-    if (e.detail.userInfo) {
-      app.globalData.userInfo = e.detail.userInfo
-      this.setData({ userInfo: e.detail.userInfo })
+  loadProfile: function() {
+    if (!app.globalData.openid) return
 
-      // 更新用户信息到云端
-      wx.cloud.callFunction({
-        name: 'login',
-        data: {
-          userInfo: e.detail.userInfo
-        }
-      })
-    }
+    const db = wx.cloud.database()
+    db.collection('users').doc(app.globalData.openid).get().then(res => {
+      if (res.data) {
+        this.setData({
+          profile: {
+            avatar: res.data.avatar || '',
+            nickname: res.data.nickname || '',
+            company: res.data.company || '',
+            business: res.data.business || ''
+          }
+        })
+      }
+    })
+  },
+
+  goToProfile: function() {
+    wx.navigateTo({
+      url: '/pages/profile/profile'
+    })
   },
 
   goToMyWarehouse: function() {
@@ -110,12 +120,9 @@ Page({
       content: '确定要退出登录吗？',
       success: (res) => {
         if (res.confirm) {
-          // 清除本地存储的登录信息
           wx.removeStorageSync('userInfo')
-          // 清除全局数据
           app.globalData.userInfo = null
           app.globalData.openid = null
-          // 跳转到登录页面
           wx.redirectTo({
             url: '/pages/login/login'
           })

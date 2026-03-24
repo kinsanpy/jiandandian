@@ -6,6 +6,7 @@ const db = cloud.database()
 
 // 注册
 async function register(event, context) {
+  const wxContext = cloud.getWXContext()
   const { username, password } = event
 
   if (!username || !password) {
@@ -21,20 +22,19 @@ async function register(event, context) {
     throw new Error('用户名已存在')
   }
 
-  // 创建用户
-  const userId = 'user_' + Date.now()
-  await db.collection('users').add({
+  // 使用OPENID作为文档ID，用set方法确保覆盖
+  await db.collection('users').doc(wxContext.OPENID).set({
     data: {
-      _id: userId,
+      _id: wxContext.OPENID,
       username: username,
-      password: password, // 实际生产环境应加密存储
+      password: password,
       created_at: db.serverDate()
     }
   })
 
   return {
     success: true,
-    userId: userId,
+    userId: wxContext.OPENID,
     username: username
   }
 }

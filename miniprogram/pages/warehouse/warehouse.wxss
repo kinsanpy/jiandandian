@@ -52,6 +52,26 @@
   margin-right: 12rpx;
 }
 
+.owner-avatar-wrapper {
+  margin-right: 12rpx;
+}
+
+.owner-avatar-placeholder {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.owner-avatar-placeholder text {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
 .owner-name {
   font-size: 26rpx;
   color: #666;

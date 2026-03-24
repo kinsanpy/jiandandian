@@ -3,6 +3,7 @@
     "pages/login/login",
     "pages/index/index",
     "pages/mine/mine",
+    "pages/profile/profile",
     "pages/warehouse/warehouse",
     "pages/warehouse/list",
     "pages/warehouse/product",
