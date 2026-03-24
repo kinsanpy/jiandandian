@@ -28,6 +28,10 @@ async function register(event, context) {
       _id: wxContext.OPENID,
       username: username,
       password: password,
+      avatar: '',
+      nickname: '',
+      company: '',
+      business: '',
       created_at: db.serverDate()
     }
   })
