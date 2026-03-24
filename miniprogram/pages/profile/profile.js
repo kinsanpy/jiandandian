@@ -128,6 +128,7 @@ Page({
     // 先获取原数据，合并后用 set 写入（避免覆盖其他字段）
     db.collection('users').doc(userId).get().then((res) => {
       const existingData = res.data || {}
+      delete existingData._id  // 删除_id，set时不能传入_id
       const dataToSave = Object.assign({}, existingData, {
         updated_at: db.serverDate()
       })
