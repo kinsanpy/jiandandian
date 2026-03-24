@@ -125,16 +125,21 @@ Page({
 
     const db = wx.cloud.database()
 
-    // 使用 update + upsert:true，既能更新现有字段，也能新增字段
-    db.collection('users').doc(userId).update({
-      data: {
+    // 先获取原数据，合并后用 set 写入
+    db.collection('users').doc(userId).get().then((res) => {
+      const existingData = res.data || {}
+      // 合并新数据
+      const dataToSave = Object.assign({}, existingData, {
         avatar: this.data.avatar,
         nickname: this.data.nickname,
         company: this.data.company,
         business: this.data.business,
         updated_at: db.serverDate()
-      },
-      upsert: true
+      })
+
+      return db.collection('users').doc(userId).set({
+        data: dataToSave
+      })
     }).then((res) => {
       console.log('保存成功:', res)
       wx.hideLoading()
