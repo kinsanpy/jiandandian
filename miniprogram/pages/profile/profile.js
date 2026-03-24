@@ -123,23 +123,15 @@ Page({
 
     wx.showLoading({ title: '保存中...' })
 
-    const db = wx.cloud.database()
-
-    // 先获取原数据，合并后用 set 写入
-    db.collection('users').doc(userId).get().then((res) => {
-      const existingData = res.data || {}
-      // 合并新数据
-      const dataToSave = Object.assign({}, existingData, {
+    // 使用云函数保存资料
+    wx.cloud.callFunction({
+      name: 'updateProfile',
+      data: {
         avatar: this.data.avatar,
         nickname: this.data.nickname,
         company: this.data.company,
-        business: this.data.business,
-        updated_at: db.serverDate()
-      })
-
-      return db.collection('users').doc(userId).set({
-        data: dataToSave
-      })
+        business: this.data.business
+      }
     }).then((res) => {
       console.log('保存成功:', res)
       wx.hideLoading()

@@ -26,7 +26,7 @@
     <!-- 主营业务 -->
     <view class="form-item">
       <text class="form-label">主营业务</text>
-      <input class="form-input" placeholder="请输入主营业务（可选）" value="{{business}}" bindinput="onBusinessInput" />
+      <textarea class="form-textarea" placeholder="请输入主营业务（可选）" value="{{business}}" bindinput="onBusinessInput" auto-height />
     </view>
 
     <!-- 保存按钮 -->
