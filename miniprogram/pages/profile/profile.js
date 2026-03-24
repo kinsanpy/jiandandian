@@ -125,28 +125,20 @@ Page({
 
     const db = wx.cloud.database()
 
-    // 构建要保存的数据，只包含有值的字段
-    const dataToSave = {
-      updated_at: db.serverDate()
-    }
-    if (this.data.avatar) dataToSave.avatar = this.data.avatar
-    if (this.data.nickname) dataToSave.nickname = this.data.nickname
-    if (this.data.company) dataToSave.company = this.data.company
-    if (this.data.business) dataToSave.business = this.data.business
-
-    // 先查询文档是否存在
+    // 先获取原数据，合并后用 set 写入（避免覆盖其他字段）
     db.collection('users').doc(userId).get().then((res) => {
-      if (res.data) {
-        // 文档存在，用update更新字段
-        return db.collection('users').doc(userId).update({
-          data: dataToSave
-        })
-      } else {
-        // 文档不存在，用set创建
-        return db.collection('users').doc(userId).set({
-          data: Object.assign({ _id: userId, created_at: db.serverDate() }, dataToSave)
-        })
-      }
+      const existingData = res.data || {}
+      const dataToSave = Object.assign({}, existingData, {
+        updated_at: db.serverDate()
+      })
+      if (this.data.avatar) dataToSave.avatar = this.data.avatar
+      if (this.data.nickname) dataToSave.nickname = this.data.nickname
+      if (this.data.company) dataToSave.company = this.data.company
+      if (this.data.business) dataToSave.business = this.data.business
+
+      return db.collection('users').doc(userId).set({
+        data: dataToSave
+      })
     }).then((res) => {
       console.log('保存成功:', res)
       wx.hideLoading()
