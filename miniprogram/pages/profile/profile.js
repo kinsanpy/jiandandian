@@ -125,30 +125,26 @@ Page({
 
     const db = wx.cloud.database()
 
+    // 构建要保存的数据，只包含有值的字段
+    const dataToSave = {
+      updated_at: db.serverDate()
+    }
+    if (this.data.avatar) dataToSave.avatar = this.data.avatar
+    if (this.data.nickname) dataToSave.nickname = this.data.nickname
+    if (this.data.company) dataToSave.company = this.data.company
+    if (this.data.business) dataToSave.business = this.data.business
+
     // 先查询文档是否存在
     db.collection('users').doc(userId).get().then((res) => {
       if (res.data) {
         // 文档存在，用update更新字段
         return db.collection('users').doc(userId).update({
-          data: {
-            avatar: this.data.avatar,
-            nickname: this.data.nickname,
-            company: this.data.company,
-            business: this.data.business,
-            updated_at: db.serverDate()
-          }
+          data: dataToSave
         })
       } else {
         // 文档不存在，用set创建
         return db.collection('users').doc(userId).set({
-          data: {
-            _id: userId,
-            avatar: this.data.avatar,
-            nickname: this.data.nickname,
-            company: this.data.company,
-            business: this.data.business,
-            created_at: db.serverDate()
-          }
+          data: Object.assign({ _id: userId, created_at: db.serverDate() }, dataToSave)
         })
       }
     }).then((res) => {
