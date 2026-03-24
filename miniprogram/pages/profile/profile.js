@@ -124,14 +124,32 @@ Page({
     wx.showLoading({ title: '保存中...' })
 
     const db = wx.cloud.database()
-    // 使用 set 直接设置字段值，而不是 update（只会更新已存在的字段）
-    db.collection('users').doc(userId).set({
-      data: {
-        avatar: this.data.avatar,
-        nickname: this.data.nickname,
-        company: this.data.company,
-        business: this.data.business,
-        updated_at: db.serverDate()
+
+    // 先查询文档是否存在
+    db.collection('users').doc(userId).get().then((res) => {
+      if (res.data) {
+        // 文档存在，用update更新字段
+        return db.collection('users').doc(userId).update({
+          data: {
+            avatar: this.data.avatar,
+            nickname: this.data.nickname,
+            company: this.data.company,
+            business: this.data.business,
+            updated_at: db.serverDate()
+          }
+        })
+      } else {
+        // 文档不存在，用set创建
+        return db.collection('users').doc(userId).set({
+          data: {
+            _id: userId,
+            avatar: this.data.avatar,
+            nickname: this.data.nickname,
+            company: this.data.company,
+            business: this.data.business,
+            created_at: db.serverDate()
+          }
+        })
       }
     }).then((res) => {
       console.log('保存成功:', res)
